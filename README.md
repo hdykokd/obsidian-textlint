@@ -16,6 +16,8 @@ An [Obsidian](https://obsidian.md) plugin for textlint.
 - Lint on text change (toggleable) Lint on file save (toggleable)
   - This feature is experimental.
 - You can configure settings to overwrite textlintrc per folder.
+  - Read `.json` files in vault
+  - read code blocks in `.md` files in vault (see below for details)
 
 ## Commands
 - Show textlint diagnostics
@@ -29,6 +31,17 @@ An [Obsidian](https://obsidian.md) plugin for textlint.
 5. Create obsidian-textlint directory in .obsidian/plugins/ in the vault where you want to use the plugin.
 6. copy main.js, styles.css, manifest.json in the root directory to the created directory
 7. Open the vault and activate the plugin.
+
+### Configure override textlintrc
+`.md` ファイルに下記のようなコードブロックを書くと上書きする設定として使うことができます。
+
+`````
+```json:textlintrc.json
+{
+  "rules": {}
+}
+```
+`````
 
 ## Recommended
 Remove textlint worker and textlintrc settings from git control to incorporate repository changes
