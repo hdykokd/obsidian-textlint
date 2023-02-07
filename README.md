@@ -4,8 +4,8 @@ An [Obsidian](https://obsidian.md) plugin for textlint.
 
 **Note:**  You must build the plugin to use it. (This is to configure textlint for your own use.)
 
-https://user-images.githubusercontent.com/19975408/217126158-01cea041-3e1a-4b59-9450-dac77336c3a1.png
-https://user-images.githubusercontent.com/19975408/217126016-9e18c183-a0ab-45a8-ada5-54055c03e773.mp4
+![](https://user-images.githubusercontent.com/19975408/217126158-01cea041-3e1a-4b59-9450-dac77336c3a1.png)
+![](https://user-images.githubusercontent.com/19975408/217126016-9e18c183-a0ab-45a8-ada5-54055c03e773.mp4)
 
 ## Features
 - Using textlint with customized rules for your own use
@@ -39,8 +39,8 @@ https://user-images.githubusercontent.com/19975408/217126016-9e18c183-a0ab-45a8-
 7. Open the vault and activate the plugin.
 
 ## Settings
-https://user-images.githubusercontent.com/19975408/217126174-88cbea90-f8dc-46ba-8f1e-77473b1ebf87.png
-https://user-images.githubusercontent.com/19975408/217126171-70ed5183-9db1-46c5-9230-24053cd61fa7.png
+![](https://user-images.githubusercontent.com/19975408/217126174-88cbea90-f8dc-46ba-8f1e-77473b1ebf87.png)
+![](https://user-images.githubusercontent.com/19975408/217126171-70ed5183-9db1-46c5-9230-24053cd61fa7.png)
 
 ### Configure override textlintrc
 You can use the following code block in your `.md` file as an override setting.
