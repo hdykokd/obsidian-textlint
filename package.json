@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "setup-textlint": "npm --prefix userconfig install && npm --prefix userconfig run compile",
     "setup": "npm run setup-textlint && npm run build",
+    "setup-textlint": "npm --prefix build_config install && npm --prefix build_config run compile",
     "version": "node version-bump.mjs && git add manifest.json versions.json"
   },
   "keywords": [],
