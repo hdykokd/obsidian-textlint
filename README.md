@@ -32,7 +32,7 @@ More screenshots and videos are here. https://github.com/hdykokd/obsidian-textli
 - Run textlint lint
 
 ## How to use
-1. Prepare textlintrc and textlint worker script using [@textlint/script-compiler](https://github.com/textlint/editor/tree/master/packages/@textlint/script-compiler) [Example](https://github.com/hdykokd/obsidian-textlint/blob/b3268a561429c2002a67d1d4928dc0d50662af2e/build_config/package.json#L8-L10)
+1. Prepare textlintrc and textlint worker script using [@textlint/script-compiler](https://github.com/textlint/editor/tree/master/packages/@textlint/script-compiler). [Example is here](https://github.com/hdykokd/obsidian-textlint/blob/b3268a561429c2002a67d1d4928dc0d50662af2e/build_config/package.json#L8-L10)
 2. Put textlintrc configuration in build_config/textlintrc.json
 3. Put worker script in build_config/worker/textlint-worker.worker.js (change the extension to `.worker.js`)
 4. Run `npm run build` in the root directory
