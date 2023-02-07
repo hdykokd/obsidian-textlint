@@ -1,0 +1,3 @@
+textlint-rule-preset-ja-technical-writing
+textlint-filter-rule-allowlist
+textlint-filter-rule-comments

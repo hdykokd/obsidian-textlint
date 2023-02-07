@@ -1,0 +1,17 @@
+{
+  "name": "obsidian-textlint-build-config",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install-rules": "cat rules.txt | xargs npm install -D",
+    "compile": "npm run compile-textlint-worker && npm run rename-worker",
+    "compile-textlint-worker": "textlint-script-compiler --textlintrc ./textlintrc.json --mode production --output-dir ./worker --metadataName 'textlint-worker' --metadataNamespace 'http://localhost:3000/' --metadataHomepage 'http://localhost:3000/'",
+    "rename-worker": "mv ./worker/textlint-worker{,.worker}.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@textlint/script-compiler": "^0.12.1"
+  }
+}

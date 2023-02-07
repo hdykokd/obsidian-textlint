@@ -1,8 +1,96 @@
-/*
+/* .cm-tooltip { */
+/*   background-color: var(--background-primary) !important; */
+/* } */
+/**/
+/* .cm-lintRange { */
+/*   padding-bottom: 0; */
+/* } */
+/**/
+/* .cm-lintRange-error { */
+/*   background-image: none; */
+/*   border-bottom: 1px solid #d11; */
+/* } */
+/**/
+/* .cm-lintrange-warning { */
+/*   background-image: none; */
+/*   border-bottom: 1px solid orange; */
+/* } */
+/**/
+/* .cm-lintrange-info { */
+/*   background-image: none; */
+/*   border-bottom: 1px solid #999; */
+/* } */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+/* base */
+.textlint-plugin-severity-info {
+  color: var(--color-cyan);
+}
 
-If your plugin does not need CSS, delete this file.
+.textlint-plugin-severity-warning {
+  color: var(--color-orange);
+}
 
-*/
+.textlint-plugin-severity-error {
+  color: var(--color-red);
+}
+
+/* diagnostics view */
+
+#textlint-plugin-diagnostics-view-content {
+  display: flex;
+  flex-direction: column;
+  overflow: unset;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#textlint-plugin-diagnostics-view-content-header {
+  border-bottom: 2px solid var(--background-modifier-border);
+  padding: 1em;
+}
+
+.textlint-plugin-diagnostics-view-content-header-metadata-container {
+  color: var(--text-faint);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.textlint-plugin-diagnostics-view-content-header-metadata-severity-item {
+  margin-left: 0.25em;
+}
+
+#textlint-plugin-diagnostics-view-content-message-container {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  padding: 1em;
+}
+
+.textlint-plugin-diagnostics-view-content-message-item-container {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--background-modifier-border);
+  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  cursor: pointer;
+}
+
+.textlint-plugin-diagnostics-view-content-message-item-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.textlint-plugin-diagnostics-view-content-message-item-loc {
+  color: var(--text-faint);
+}
+
+.textlint-plugin-diagnostics-view-content-message-item-rule {
+  color: var(--text-faint);
+}
+
+.textlint-plugin-diagnostics-view-content-message-item-hr {
+  margin: 0.5em 0;
+}
