@@ -49,6 +49,8 @@ Remove textlint worker and textlintrc settings from git control to incorporate r
 `git update-index --skip-worktree` or `git update-index --assume-unchanged
 
 ```
-git update-index --skip-worktree build_config/worker/textlint-worker.worker.js
+git update-index --skip-worktree build_config/package.json
+git update-index --skip-worktree build_config/package-lock.json
 git update-index --skip-worktree build_config/textlintrc.json
+git update-index --skip-worktree build_config/worker/textlint-worker.worker.js
 ```
