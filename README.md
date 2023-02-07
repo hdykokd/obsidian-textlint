@@ -5,7 +5,8 @@ An [Obsidian](https://obsidian.md) plugin for textlint.
 **Note:**  You must build the plugin to use it. (This is to configure textlint for your own use.)
 
 ![](https://user-images.githubusercontent.com/19975408/217126158-01cea041-3e1a-4b59-9450-dac77336c3a1.png)
-![](https://user-images.githubusercontent.com/19975408/217126016-9e18c183-a0ab-45a8-ada5-54055c03e773.mp4)
+
+More screenshots and videos are here. https://github.com/hdykokd/obsidian-textlint/issues/1
 
 ## Features
 - Using textlint with customized rules for your own use
