@@ -1,6 +1,6 @@
 # Obsidian textlint
 
-An [Obsidian](https://obsidian.md) plugin for textlint.
+An [Obsidian](https://obsidian.md) plugin for [textlint](https://github.com/textlint/textlint).
 
 **Note:**  You must build the plugin to use it. (This is to configure textlint for your own use.)
 
