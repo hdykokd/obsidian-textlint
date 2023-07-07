@@ -13,6 +13,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@textlint/script-compiler": "^0.12.1"
+    "@textlint/script-compiler": "^0.15.0"
   }
 }

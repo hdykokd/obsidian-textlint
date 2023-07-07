@@ -1,6 +1,6 @@
 {
   "name": "obsidian-textlint",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A plugin for Obsidian that integrates textlint",
   "main": "main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "@codemirror/lint": "^6.1.0",
     "@codemirror/state": "^6.2.0",
     "@codemirror/view": "^6.7.3",
-    "@textlint/script-compiler": "^0.12.1",
+    "@textlint/script-compiler": "^0.15.0",
     "@textlint/types": "^13.1.0",
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "5.29.0",

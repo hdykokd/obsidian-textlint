@@ -39,10 +39,14 @@ export class WorkerManager {
   private registerOnmessageCallbacks(worker: TextlintWorker, callbacks: WorkerResponseCallbacks) {
     try {
       worker.onmessage = ({ data }: { data: TextlintWorkerCommandResponse }) => {
-        if (data.command === 'lint:result') {
+        if (data.command === 'error') {
+          const msg = '[textlint]: failed to execute worker. error: ';
+          console.error(msg, data);
+          new Notice(msg + JSON.stringify(data.error));
+        } else if (data.command === 'lint:result') {
           callbacks[data.command](data.result);
         }
-        // if (data.command === 'fix:result') {
+        // else if (data.command === 'fix:result') {
         //   callbacks[data.command](data.result);
         // }
       };
