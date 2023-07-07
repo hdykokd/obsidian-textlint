@@ -1,13 +1,9 @@
 import { Notice } from 'obsidian';
 import type { TextlintResult } from '@textlint/types';
-import type {
-  TextlintWorkerCommandResponse,
-  TextlintWorkerCommandResponseFix,
-  TextlintWorkerCommandResponseLint,
-} from '@textlint/script-compiler';
+import type { TextlintWorkerCommandResponse, TextlintWorkerCommandResponseLint } from '@textlint/script-compiler';
 
 // @ts-expect-error
-import Worker from '../../build_config/worker/textlint-worker.worker.js';
+import Worker from '../../dist/textlint-worker.worker.js';
 
 export type TextlintWorker = Worker;
 

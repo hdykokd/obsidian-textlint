@@ -1,14 +1,14 @@
 {
   "name": "obsidian-textlint",
-  "version": "1.0.0",
-  "description": "An Obsidian plugin for textlint.",
+  "version": "2.0.0",
+  "description": "A plugin for Obsidian that integrates textlint",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "setup": "npm run setup-textlint && npm run build",
-    "setup-textlint": "npm --prefix build_config install && npm --prefix build_config run compile",
-    "version": "node version-bump.mjs && git add manifest.json versions.json"
+    "setup-textlint": "npm --prefix textlint-builder install && npm --prefix textlint-builder run build",
+    "version": "node version-bump.mjs"
   },
   "keywords": [],
   "author": "",

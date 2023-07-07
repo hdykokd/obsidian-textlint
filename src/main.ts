@@ -22,6 +22,7 @@ import {
 } from './diagnosticsView';
 import { resetTextlintResponseEffect, textlintResponseEffect, textlintResponseField } from './textlint/responseField';
 import { getDiagnostics } from './cm/diagnostics';
+import defaultTextlintrc from '../dist/textlintrc_default.json';
 
 export default class TextlintPlugin extends Plugin {
   settings: TextlintPluginSettings;
@@ -39,7 +40,11 @@ export default class TextlintPlugin extends Plugin {
   } = {
     textlintResponseWatcher: null,
   };
-  defaultConfig: TextlintConfig;
+  defaultConfig: TextlintConfig = {
+    folder: '/',
+    textlintrc: JSON.stringify(defaultTextlintrc),
+    textlintrcPath: '',
+  };
   private sortedConfigs: TextlintConfig[] = [];
 
   async onload() {
@@ -83,14 +88,12 @@ export default class TextlintPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-    this.defaultConfig = {
-      folder: '/',
-      textlintrcPath: '../build_config/textlintrc.json',
-      textlintrc: JSON.stringify((await import('../build_config/textlintrc.json')).default),
-    };
-    for (const c of this.settings.textlintConfigs) {
+    for (const c of structuredClone(this.settings.textlintConfigs)) {
       try {
-        c.textlintrc = await readTextlintrc(this, c.textlintrcPath);
+        if (!c.folder) {
+          console.log("[textlint]: folder is empty. use '/' as default");
+          c.folder = '/';
+        }
         this.sortedConfigs.push(c);
       } catch (e) {
         new Notice('[textlint] Cannot read textlintrc. error: ', e.message);

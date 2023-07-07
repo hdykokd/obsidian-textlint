@@ -3,6 +3,8 @@ import { TextlintRuleSeverityLevel } from '@textlint/types';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import TextlintPlugin from './main';
 import { readTextlintrc } from './util';
+import textlintVersions from '../dist/textlint_versions.json';
+import textlintDefault from '../dist/textlintrc_default.json';
 
 const SEVERITY_OPTIONS: Record<TextlintRuleSeverityLevel, Diagnostic['severity']> = {
   0: 'info',
@@ -10,7 +12,7 @@ const SEVERITY_OPTIONS: Record<TextlintRuleSeverityLevel, Diagnostic['severity']
   2: 'error',
 };
 
-export type TextlintConfig = { folder: string; textlintrcPath: string; textlintrc: string };
+export type TextlintConfig = { folder: string; textlintrc: string; textlintrcPath: string };
 
 export interface TextlintPluginSettings {
   lintOnActiveFileChanged: boolean;
@@ -26,8 +28,6 @@ export interface TextlintPluginSettings {
   foldersToIgnore: string[];
   textlintConfigs: TextlintConfig[];
 }
-
-const DEFAULT_FOLDER_PATH = '/';
 
 export const DEFAULT_SETTINGS: TextlintPluginSettings = {
   lintOnActiveFileChanged: true,
@@ -57,10 +57,6 @@ export class TextlingPluginSettingTab extends PluginSettingTab {
   }
 
   saveTextlintConfig(config: TextlintConfig) {
-    if (config.folder === DEFAULT_FOLDER_PATH) {
-      new Notice('Cannot override default textlint config');
-      return;
-    }
     const idx = this.plugin.settings.textlintConfigs.findIndex((c) => c.folder === config.folder);
     this.plugin.settings.textlintConfigs[idx] = config;
     this.plugin.saveSettings();
@@ -150,6 +146,40 @@ export class TextlingPluginSettingTab extends PluginSettingTab {
         });
       });
 
+    // version info
+    const moduleInfoEl = containerEl.createEl('h3', { text: 'textlint modules' });
+    new Setting(moduleInfoEl)
+      .addTextArea(async (textarea) => {
+        textarea.setDisabled(true);
+        textarea.inputEl.style.width = '300px';
+        textarea.inputEl.style.height = '300px';
+        textarea.setValue(JSON.stringify(textlintVersions, null, 2));
+      })
+      .setDesc('installed modules')
+      .addButton((btn) => {
+        btn.setButtonText('Copy').onClick(async () => {
+          navigator.clipboard.writeText(JSON.stringify(textlintVersions, null, 2));
+          new Notice('Copied to clipboard.');
+        });
+      });
+
+    // worker default settings
+    const defaultConfigEl = containerEl.createEl('h3', { text: 'textlint default config' });
+    new Setting(defaultConfigEl)
+      .addTextArea(async (textarea) => {
+        textarea.setDisabled(true);
+        textarea.inputEl.style.width = '300px';
+        textarea.inputEl.style.height = '300px';
+        textarea.setValue(JSON.stringify(textlintDefault, null, 2));
+      })
+      .setDesc('default textlintrc')
+      .addButton((btn) => {
+        btn.setButtonText('Copy').onClick(async () => {
+          navigator.clipboard.writeText(JSON.stringify(textlintDefault, null, 2));
+          new Notice('Copied to clipboard.');
+        });
+      });
+
     const configEl = containerEl.createEl('h3', { text: 'textlintrc override per folder' });
 
     const addConfigEl = (config: TextlintConfig, index: number) => {
@@ -158,88 +188,83 @@ export class TextlingPluginSettingTab extends PluginSettingTab {
       el.style.padding = '1em';
       el.style.marginBottom = '0.25em';
 
-      const parse = async () => {
+      const parse = async (path: string) => {
         try {
-          const rc = await readTextlintrc(this.plugin, config.textlintrcPath);
+          const rc = await readTextlintrc(this.plugin, path);
           return rc;
         } catch (e) {
           new Notice(e.message);
           return 'Could not parse textlintrc.';
         }
       };
-      const folder = new Setting(el)
+      new Setting(el)
         .addText((text) => {
           text.setValue(config.folder).onChange(async (v) => {
             config.folder = v;
             await this.plugin.saveSettings();
             this.saveTextlintConfig(config);
           });
-          if (config.folder === this.plugin.defaultConfig.folder) {
-            text.inputEl.style.pointerEvents = 'none';
-            text.inputEl.style.cursor = 'not-allowed';
-          }
         })
         .setName('folder');
-      if (config.folder === this.plugin.defaultConfig.folder) {
-        folder.setDisabled(true).setDesc('Default folder');
-      }
 
-      const textlintrcPath = new Setting(el)
-        .addText((text) => {
-          if (config.folder === this.plugin.defaultConfig.folder) {
-            text.setDisabled(true).setValue('');
-            return;
+      const textlintrc = new Setting(el)
+        .addTextArea(async (textarea) => {
+          textarea.inputEl.style.width = '300px';
+          textarea.inputEl.style.height = '300px';
+          if (config.textlintrc) {
+            textarea.inputEl.value = JSON.stringify(JSON.parse(config.textlintrc), null, 2);
           }
+
+          textarea.onChange((v) => {
+            try {
+              config.textlintrc = JSON.stringify(JSON.parse(v));
+              this.saveTextlintConfig(config);
+              new Notice('Saved');
+            } catch (e) {
+              new Notice(e.message);
+            }
+          });
+        })
+        .setName('textlintrc');
+
+      new Setting(el)
+        .addText((text) => {
           text.setValue(config.textlintrcPath).onChange(async (v) => {
             config.textlintrcPath = v;
             this.saveTextlintConfig(config);
           });
         })
-        .setName('textlintrc path');
+        .setName('load json from file')
+        .addButton((button) => {
+          button.setButtonText('Load').onClick(async () => {
+            new Notice('Load textlintrc from: ' + config.textlintrcPath);
+            config.textlintrc = JSON.stringify(JSON.parse(await parse(config.textlintrcPath)));
 
-      const textlintrcPreview = new Setting(el)
-        .addTextArea(async (textarea) => {
-          textarea.setDisabled(true);
-          textarea.inputEl.style.width = '300px';
-          textarea.inputEl.style.height = '300px';
-          if (config.folder === this.plugin.defaultConfig.folder) {
-            textarea.setValue(JSON.stringify(JSON.parse(this.plugin.defaultConfig.textlintrc), null, 2));
-            return;
-          }
+            new Notice('textlintrc loaded.');
+            this.saveTextlintConfig(config);
 
-          textarea.setValue(await parse());
-          textlintrcPath.controlEl.on('input', 'input', async () => {
-            textarea.setValue(await parse());
-          });
-          textlintrcPath.controlEl.on('change', 'input', async () => {
-            textarea.setValue(await parse());
-          });
-        })
-        .setName('textlintrc preview')
-        .setDesc('readonly (preview of parsed result)');
-      if (config.folder === this.plugin.defaultConfig.folder) {
-        textlintrcPreview.setDisabled(true).setDesc('Default textlintrc (used by generating worker script)');
-      }
-
-      if (config.folder !== this.plugin.defaultConfig.folder) {
-        const removeBtn = new Setting(el).addButton((button) => {
-          button.setButtonText('Remove').onClick(async () => {
-            this.plugin.settings.textlintConfigs.splice(index, 1);
-            await this.plugin.saveSettings();
-            this.display();
+            if (textlintrc.controlEl.firstChild) {
+              // @ts-expect-error
+              textlintrc.controlEl.firstChild.value = JSON.stringify(JSON.parse(config.textlintrc), null, 2);
+            }
           });
         });
-      }
-    };
 
-    addConfigEl(this.plugin.defaultConfig, -1);
+      new Setting(el).addButton((button) => {
+        button.setButtonText('Remove').onClick(async () => {
+          this.plugin.settings.textlintConfigs.splice(index, 1);
+          await this.plugin.saveSettings();
+          this.display();
+        });
+      });
+    };
 
     this.textlintConfigs.forEach((c, i) => {
       addConfigEl(c, i);
     });
 
     const addBtn = new Setting(configEl).addButton((button) => {
-      button.setButtonText('Add').onClick(async (evt) => {
+      button.setButtonText('Add').onClick(async () => {
         this.textlintConfigs.push({ folder: '', textlintrcPath: '', textlintrc: '' });
         this.display();
       });

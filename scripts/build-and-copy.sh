@@ -19,3 +19,4 @@ fi
 cp main.js "$target"
 cp styles.css "$target"
 cp manifest.json "$target"
+cp -r dist "$target"

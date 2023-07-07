@@ -12,7 +12,12 @@ export const getAbstractFile = (plugin: Plugin, path: string) => {
 };
 
 export const readVaultFile = async (plugin: Plugin, path: string) => {
-  return await plugin.app.vault.adapter.read(path);
+  const file = getAbstractFile(plugin, path);
+  if (file instanceof TFile) {
+    return await app.vault.cachedRead(file);
+  } else {
+    throw new Error("File isn't TFile. path: " + path);
+  }
 };
 
 const parseTextlintrcInCodeBlock = (text: string) => {

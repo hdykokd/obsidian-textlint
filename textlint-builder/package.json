@@ -1,13 +1,14 @@
 {
-  "name": "obsidian-textlint-build-config",
+  "name": "obsidian-textlint-textlint-builder",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install-rules": "cat textlint-rules.txt | xargs npm install -D",
-    "compile": "npm run compile-textlint-worker && npm run rename-worker",
+    "compile": "npm run compile-textlint-worker && npm run copy-worker",
     "compile-textlint-worker": "textlint-script-compiler --textlintrc ./textlintrc.json --mode production --output-dir ./worker --metadataName 'textlint-worker' --metadataNamespace 'http://localhost:3000/' --metadataHomepage 'http://localhost:3000/'",
-    "rename-worker": "mv ./worker/textlint-worker{,.worker}.js"
+    "copy-worker": "mv ./worker/textlint-worker.js ../dist/textlint-worker.worker.js",
+    "dump": "node ./dump-rule-info.js && cp ./textlintrc.json ../dist/textlintrc_default.json",
+    "build": "npm run compile && npm run dump"
   },
   "author": "",
   "license": "ISC",
