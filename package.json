@@ -8,7 +8,8 @@
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "setup": "npm run setup-textlint && npm run build",
     "setup-textlint": "npm --prefix textlint-builder install && npm --prefix textlint-builder run build",
-    "version": "node version-bump.mjs"
+    "version": "node version-bump.mjs",
+    "release": "cat package.json | jq '.version' | xargs ./scripts/release.sh"
   },
   "keywords": [],
   "author": "",
