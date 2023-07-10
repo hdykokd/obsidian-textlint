@@ -84,12 +84,10 @@ export const isIgnoredFile = (file: TFile, folders: string[]) => {
   return false;
 };
 
-// TODO; memoize
 export const textlintSeverityToDiagnosticSeverity = (severity: TextlintRuleSeverityLevel) => {
   return ['info', 'warning', 'error'][severity] as Diagnostic['severity'];
 };
 
-// TODO; memoize
 export const diagnosticSeverityToTextlintSeverity = (severity: Diagnostic['severity']) => {
-  return { info: 0, warning: 1, error: 2 }[severity] as TextlintRuleSeverityLevel;
+  return { hint: 0, info: 0, warning: 1, error: 2 }[severity] as TextlintRuleSeverityLevel;
 };
