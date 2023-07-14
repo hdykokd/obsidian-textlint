@@ -48,7 +48,7 @@ export default class TextlintPlugin extends Plugin {
   private sortedConfigs: TextlintConfig[] = [];
 
   async onload() {
-    console.log('[Obsidian textlint] loading...');
+    console.log('[textlint] loading...');
 
     this.isEnabled = true;
     this.workerManager = new WorkerManager();
@@ -71,12 +71,11 @@ export default class TextlintPlugin extends Plugin {
 
       this.addSettingTab(new TextlingPluginSettingTab(this.app, this));
     });
-
-    console.log('[Obsidian textlint] loaded');
+    console.log('[textlint] loaded');
   }
 
   async onunload() {
-    console.log('[Obsidian textlint] unloading...');
+    console.log('[textlint] unloading...');
 
     this.isEnabled = false;
     this.resetState();
@@ -84,7 +83,7 @@ export default class TextlintPlugin extends Plugin {
     this.workerManager.terminate();
     this.sortedConfigs = [];
 
-    console.log('[Obsidian textlint] unloaded');
+    console.log('[textlint] unloaded');
   }
 
   async loadSettings() {
@@ -104,7 +103,13 @@ export default class TextlintPlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
+    this.runLint();
   }
+
+  // async reload() {
+  //   await this.onunload();
+  //   await this.onload();
+  // }
 
   addCommands() {
     this.addCommand({
@@ -263,6 +268,7 @@ export default class TextlintPlugin extends Plugin {
   }, 250);
 
   private async registerWorkers() {
+    console.log('[textlint]: registering workers...');
     this.registerWorker(this.defaultConfig.folder, this.defaultConfig.textlintrc);
     for (const c of this.sortedConfigs) {
       this.registerWorker(c.folder, c.textlintrc);

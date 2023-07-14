@@ -270,5 +270,11 @@ export class TextlingPluginSettingTab extends PluginSettingTab {
       });
     });
     addBtn.settingEl.style.border = 'none';
+
+    // new Setting(configEl).addButton((button) => {
+    //   button.setButtonText('Reload plugin').onClick(async () => {
+    //     this.plugin.reload();
+    //   });
+    // });
   }
 }

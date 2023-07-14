@@ -17,6 +17,7 @@ export class WorkerManager {
   constructor() {}
 
   public terminate() {
+    console.log('[textlint worker]: terminating...');
     Object.keys(this.workers).forEach((k) => {
       this.workers[k].terminate();
     });
@@ -40,7 +41,7 @@ export class WorkerManager {
     try {
       worker.onmessage = ({ data }: { data: TextlintWorkerCommandResponse }) => {
         if (data.command === 'error') {
-          const msg = '[textlint]: failed to execute worker. error: ';
+          const msg = '[textlint worker]: failed to execute worker. error: ';
           console.error(msg, data);
           new Notice(msg + JSON.stringify(data.error));
         } else if (data.command === 'lint:result') {
@@ -51,17 +52,17 @@ export class WorkerManager {
         // }
       };
     } catch (e) {
-      console.log('[textlint]: failed to register worker.onmessage()', e);
+      console.log('[textlint worker]: failed to register worker.onmessage()', e);
     }
   }
 
   public registerWorker(folder: string, textlintrc: string, callbacks: WorkerResponseCallbacks) {
     if (!folder) {
-      console.log('[textlint]: Could not register worker. folder is empty');
+      console.log('[textlint worker]: Could not register worker. folder is empty');
       return;
     }
     if (!textlintrc) {
-      console.log('[textlint]: Could not register worker. textlintrc is empty');
+      console.log('[textlint worker]: Could not register worker. textlintrc is empty');
       return;
     }
     const worker = this.newWorker(textlintrc);
@@ -85,7 +86,7 @@ export class WorkerManager {
         ext: '.md',
       });
     } catch (e) {
-      console.log('[textlint]: failed to execute worker.postMessage(). command: "lint"', e);
+      console.log('[textlint worker]: failed to execute worker.postMessage(). command: "lint"', e);
     }
   }
 }
