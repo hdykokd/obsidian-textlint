@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@textlint/script-compiler": "^0.15.0",
+    "@textlint/script-compiler": "^0.15.0"
   },
   "packageManager": "pnpm@8.6.5"
 }
