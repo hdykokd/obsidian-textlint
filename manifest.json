@@ -1,9 +1,9 @@
 {
-  "id": "textlint-plugin",
-  "name": "Obsidian textlint",
+  "id": "textlint",
+  "name": "textlint",
   "version": "2.1.2",
   "minAppVersion": "0.15.0",
-  "description": "An Obsidian plugin for textlint.",
+  "description": "Integrates textlint (https://github.com/textlint/textlint)",
   "author": "hdykokd",
   "authorUrl": "https://hdykokd.me",
   "fundingUrl": "https://buymeacoffee.com/hdykokd",

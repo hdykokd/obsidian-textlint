@@ -1,7 +1,7 @@
 {
   "name": "obsidian-textlint",
   "version": "2.1.2",
-  "description": "A plugin for Obsidian that integrates textlint",
+  "description": "This is a plugin for Obsidian (https://obsidian.md) that integrates textlint",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
