@@ -67,6 +67,7 @@ export default class TextlintPlugin extends Plugin {
       this.registerDiagnosticsViewExtension();
       this.addCommands();
       this.setWachers();
+      this.runLint();
 
       this.addSettingTab(new TextlingPluginSettingTab(this.app, this));
     });
@@ -107,7 +108,7 @@ export default class TextlintPlugin extends Plugin {
 
   addCommands() {
     this.addCommand({
-      id: 'obsidian-textlint-run-lint',
+      id: 'run-lint',
       name: 'Run textlint lint',
       editorCallback: () => {
         this.runLint();
@@ -121,19 +122,23 @@ export default class TextlintPlugin extends Plugin {
     });
     this.registerExtensions([TEXTLINT_DIAGNOSTICS_EXTENSION], VIEW_TYPE_TEXTLINT_DIAGNOSTICS);
     this.addCommand({
-      id: 'obsidian-textlint-show-diagnostics',
+      id: 'show-diagnostics-view',
       name: 'Show textlint diagnostics',
-      editorCallback: async () => {
-        const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_TEXTLINT_DIAGNOSTICS);
-        if (leaves[0]) {
-          return this.app.workspace.revealLeaf(leaves[0]);
+      callback: async () => {
+        const activeViewLeaf = this.getDiagnosticViewLeaf();
+        if (activeViewLeaf) {
+          this.app.workspace.revealLeaf(activeViewLeaf);
+          return;
         }
         const leaf = this.app.workspace.getRightLeaf(false);
         await leaf.setViewState({
           type: VIEW_TYPE_TEXTLINT_DIAGNOSTICS,
           active: true,
         });
-        this.app.workspace.revealLeaf(leaf);
+        const activeLeaf = this.app.workspace.getMostRecentLeaf();
+        if (activeLeaf) {
+          this.app.workspace.setActiveLeaf(activeLeaf);
+        }
       },
     });
   }
@@ -156,7 +161,13 @@ export default class TextlintPlugin extends Plugin {
 
     if (this.settings.lintOnActiveFileChanged) {
       this.registerEvent(
-        this.app.workspace.on('active-leaf-change', () => {
+        this.app.workspace.on('active-leaf-change', (leaf) => {
+          if (!leaf) return;
+          const state = leaf.getViewState();
+          if (state.type === VIEW_TYPE_TEXTLINT_DIAGNOSTICS) return;
+          if (state.type !== 'markdown') {
+            return this.clear();
+          }
           this.runLint();
         }),
       );
@@ -172,6 +183,18 @@ export default class TextlintPlugin extends Plugin {
     ].filter((v) => v) as Extension[];
 
     this.registerEditorExtension(extensions);
+  }
+
+  getDiagnosticViewLeaf() {
+    const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_TEXTLINT_DIAGNOSTICS);
+    if (!leaves[0]) return;
+    return leaves[0];
+  }
+
+  getDiagnosticView() {
+    const leaf = this.getDiagnosticViewLeaf();
+    if (!leaf) return;
+    return leaf.view as TextlintDiagnosticView;
   }
 
   getLintOnTextChangedExtension() {
@@ -219,20 +242,25 @@ export default class TextlintPlugin extends Plugin {
     return folder;
   }
 
+  clear() {
+    const view = this.getDiagnosticView();
+    if (!view) return;
+    view.clear();
+  }
+
   runLint = debounce(() => {
     if (!this.isEnabled) return;
     const cm = getActiveEditorView(this);
     if (!cm) return;
-
     const file = getActiveFile(this);
     if (!file) return;
     if (isIgnoredFile(file, this.settings.foldersToIgnore)) return;
-    //
+
     const worker = this.getWorker(file.path);
     const data = cm.state.doc.toJSON().join('\n');
 
     runLint(worker, data);
-  }, 200);
+  }, 250);
 
   private async registerWorkers() {
     this.registerWorker(this.defaultConfig.folder, this.defaultConfig.textlintrc);
@@ -271,7 +299,9 @@ export default class TextlintPlugin extends Plugin {
         if (lastUpdateTime === textlintResponse.lastUpdateTime) return;
 
         const { messages } = textlintResponse.response;
-        TextlintDiagnosticView.setTextlintDiagnostics(this, messages);
+        const view = this.getDiagnosticView();
+        if (!view) return;
+        view.setTextlintDiagnostics(this, messages);
         const diagnostics = getDiagnostics(this, messages);
         cm.dispatch(setDiagnostics(cm.state, diagnostics));
         lastUpdateTime = textlintResponse.lastUpdateTime;
@@ -287,7 +317,7 @@ export default class TextlintPlugin extends Plugin {
       processing = true;
       process();
       processing = false;
-    }, 200);
+    }, 500);
   }
 
   private resetState() {
